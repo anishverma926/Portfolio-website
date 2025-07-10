@@ -16,37 +16,40 @@ export const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10); // ✅ Fixed
+      setIsScrolled(window.scrollY > 10); // ✅ Fix here: use scrollY instead of screenY
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Prevent body scroll when menu is open (optional)
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
+  }, [isMenuOpen]);
 
   return (
     <nav
       className={cn(
         "fixed w-full z-40 transition-all duration-300",
-        isScrolled ? "py-3 bg-background/80 backdrop-blur-md shadow-xs" : "py-5"
+        isScrolled ? "py-4 bg-background/80 backdrop-blur-md shadow-md" : "py-6"
       )}
     >
-      <div className="container flex items-center justify-between">
+      <div className="container mx-auto flex items-center justify-between px-6">
+        {/* Logo */}
         <a
-          className="text-xl font-bold text-primary flex items-center"
+          className="text-2xl font-extrabold text-primary flex items-center"
           href="#hero"
         >
-          <span className="relative z-10">
-            <span className="text-glow text-foreground"> PedroTech </span> Portfolio
-          </span>
+          <span className="relative z-10">Portfolio</span>
         </a>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex space-x-10">
           {navItems.map((item, key) => (
             <a
               key={key}
               href={item.href}
-              className="text-foreground/80 hover:text-primary transition-colors duration-300"
+              className="text-lg text-foreground/80 hover:text-primary transition-colors duration-300 font-medium"
             >
               {item.name}
             </a>
@@ -56,10 +59,10 @@ export const Navbar = () => {
         {/* Mobile menu toggle */}
         <button
           onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="md:hidden p-2 text-foreground z-50 cursor-pointer"
+          className="md:hidden p-3 text-foreground z-50"
           aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
         >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
 
         {/* Mobile nav menu */}
@@ -72,13 +75,13 @@ export const Navbar = () => {
               : "opacity-0 pointer-events-none"
           )}
         >
-          <div className="flex flex-col space-y-8 text-xl">
+          <div className="flex flex-col space-y-10 text-2xl font-semibold text-center">
             {navItems.map((item, key) => (
               <a
                 key={key}
                 href={item.href}
-                className="text-foreground/80 hover:text-primary transition-colors duration-300"
                 onClick={() => setIsMenuOpen(false)}
+                className="text-foreground/80 hover:text-primary transition-colors duration-300"
               >
                 {item.name}
               </a>
